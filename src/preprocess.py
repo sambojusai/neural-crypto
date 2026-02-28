@@ -22,4 +22,4 @@ def scale_data(data, symbol):
     scaler = MinMaxScaler(feature_range=(0, 1))
     scaled = scaler.fit_transform(data)
     save_scaler(scaler, symbol)
-    return scaled
+    return scaled, scaler

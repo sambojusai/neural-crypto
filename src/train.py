@@ -3,7 +3,7 @@ import argparse
 import numpy as np
 
 from src.crypto_loader import load_crypto_data
-from src.preprocess import scale_data, save_scaler
+from src.preprocess import scale_data
 from src.model_builder import build_model
 
 
@@ -16,7 +16,7 @@ def train_crypto(symbol="bitcoin", epochs=25):
     prices = data["close"].values.reshape(-1, 1)
 
     # Scale data
-    scaled = scale_data(prices, symbol)
+    scaled, scaler = scale_data(prices, symbol)
 
     # Create sequences
     seq_length = 60
@@ -38,8 +38,7 @@ def train_crypto(symbol="bitcoin", epochs=25):
     os.makedirs("model", exist_ok=True)
     model.save(f"model/{symbol}_model.h5")
 
-    # Save scaler
-    save_scaler(symbol)
+
 
     print(f"Model trained and saved for {symbol}")
 
