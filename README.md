@@ -13,7 +13,7 @@ A **deep learning web application** that predicts the next-day price of **Bitcoi
 
 ## 🚀 Live Demo
 
-👉 **[Coming Soon — Streamlit Cloud](#)**
+👉 **[https://neural-crypto-qyjjwwxbtjjyfhufk3f6cg.streamlit.app/](#)**
 
 ---
 
