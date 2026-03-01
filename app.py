@@ -63,9 +63,10 @@ try:
         direction = "📉 DOWN"
         color = "red"
 
-    # Calculate MAE and RMSE (naive baseline on last 30 days)
-    naive_predictions = df["close"].shift(1).tail(30).dropna().values
-    actual_for_naive = df["close"].tail(30).iloc[1:].values
+    # Calculate MAE and RMSE — fixed array sizes
+    closes = df["close"].values
+    actual_for_naive = closes[-29:]      # 29 values
+    naive_predictions = closes[-30:-1]   # 29 values — same size!
 
     mae = mean_absolute_error(actual_for_naive, naive_predictions)
     rmse = np.sqrt(mean_squared_error(actual_for_naive, naive_predictions))
