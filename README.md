@@ -1,98 +1,151 @@
-# 📈 Crypto Price Predictor (BTC & ETH)
+# 🧠 NeuralCrypto — AI Crypto Price Predictor
 
-A **Streamlit-based cryptocurrency price prediction web application** that uses a **deep learning LSTM model** to predict the **next-day price** of **Bitcoin (BTC)** and **Ethereum (ETH)**.
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange)
+![Streamlit](https://img.shields.io/badge/Streamlit-Live-red)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-The app also displays **live prices**, **TradingView-style candlestick charts**, and **historical price trends** using real market data.
+A **deep learning web application** that predicts the next-day price of **Bitcoin (BTC)** and **Ethereum (ETH)** using an **LSTM neural network**, built with TensorFlow/Keras and deployed via Streamlit.
 
----
-
-## 🚀 Features
-
-- 🔥 **Live Bitcoin & Ethereum Price**
-- 🤖 **AI-based Next-Day Price Prediction (LSTM)**
-- 📊 **TradingView-style Candlestick Chart (Last 24 Hours)**
-- 📉 **Last 60 Days Closing Price Chart**
-- ⚡ Interactive **Streamlit Dashboard**
-- ☁️ **Streamlit Cloud Deployable**
+> ⚠️ This project is for **educational purposes only** and is NOT financial advice.
 
 ---
 
-## 🧠 Machine Learning Model
+## 🚀 Live Demo
 
-- **Model Type:** LSTM (Long Short-Term Memory)
-- **Framework:** TensorFlow / Keras
-- **Input Window:** Last 60 days
-- **Output:** Next-day closing price
-- **Scaler:** MinMaxScaler (saved using Joblib)
-- **Models:** Separate models for BTC and ETH
-
-> ⚠️ This project is for **educational purposes only**.  
-> It is **NOT financial advice**.
+👉 **[Coming Soon — Streamlit Cloud](#)**
 
 ---
+
+## ✨ Features
+
+- 🔥 **Live BTC & ETH Prices** — fetched in real-time via CoinGecko API
+- 🤖 **AI Next-Day Price Prediction** — powered by LSTM deep learning model
+- 📊 **Real Candlestick Charts** — OHLC data from Binance API
+- 📉 **60-Day Historical Price Trend** — interactive line chart
+- ⚡ **Fast & Responsive** — built with Streamlit, cached API calls
+
+---
+
+## 🧠 Machine Learning Architecture
+
+| Component | Details |
+|---|---|
+| Model Type | LSTM (Long Short-Term Memory) |
+| Framework | TensorFlow / Keras |
+| Input | Last 60 days of closing prices |
+| Output | Next-day predicted closing price |
+| Optimizer | Adam |
+| Loss Function | Mean Squared Error (MSE) |
+| Regularization | Dropout (0.2) |
+| Scaler | MinMaxScaler (0–1 normalization) |
+
+### Why LSTM?
+Crypto prices are **sequential and time-dependent**. LSTM networks are specifically designed to learn long-term patterns in sequential data, making them more suitable than traditional models like ARIMA for volatile, non-linear time series like cryptocurrency prices.
+
+---
+
 ## 📂 Project Structure
 
-crypto-price-predictor/
+```
+neural-crypto/
 │
-├── app.py # Streamlit frontend
-├── requirements.txt # Python dependencies
-│
-├── model/
-│ ├── bitcoin_model.h5 # Trained BTC model
-│ ├── ethereum_model.h5 # Trained ETH model
-│ └── scaler.pkl # Saved MinMaxScaler
+├── app.py                  # Streamlit frontend dashboard
+├── requirements.txt        # Python dependencies
+├── README.md
 │
 ├── src/
-│ ├── init.py
-│ ├── crypto_loader.py # Live & historical data loaders
-│ ├── predict.py # Prediction logic
-│ ├── preprocess.py # Scaling utilities
-│ ├── model_builder.py # LSTM architecture
-│ └── train.py # Model training script
+│   ├── __init__.py
+│   ├── crypto_loader.py    # CoinGecko + Binance API integration
+│   ├── predict.py          # Prediction pipeline
+│   ├── preprocess.py       # MinMaxScaler utilities
+│   ├── model_builder.py    # LSTM architecture definition
+│   └── train.py            # Model training script
 │
-├── .gitignore
-└── README.md
-
-yaml
-Copy code
+└── model/                  # Saved models (not tracked in git)
+    ├── bitcoin_model.h5
+    ├── ethereum_model.h5
+    ├── bitcoin_scaler.pkl
+    └── ethereum_scaler.pkl
+```
 
 ---
 
 ## 📊 Data Sources
 
-- **Live Prices:** CoinGecko API  
-- **Historical Prices:** CoinGecko  
-- **Candlestick (OHLC):** Binance API  
+| Data | Source | Details |
+|---|---|---|
+| Live Price | CoinGecko API | Real-time USD price |
+| Historical Prices | CoinGecko API | 90 days daily closing |
+| OHLC Candlestick | Binance API | Real open/high/low/close |
 
 ---
 
+## 🛠️ Tech Stack
 
-This project is Streamlit Cloud ready.
+- **Language:** Python 3.11
+- **Deep Learning:** TensorFlow, Keras
+- **Frontend:** Streamlit
+- **Data Processing:** NumPy, Pandas, Scikit-learn
+- **Visualization:** Plotly
+- **APIs:** CoinGecko, Binance
 
-Steps:
-Push code to GitHub
+---
 
-Visit 👉 https://share.streamlit.io
+## ⚙️ Run Locally
 
-Select:
+**1. Clone the repository:**
+```bash
+git clone https://github.com/sambojusai/neural-crypto.git
+cd neural-crypto
+```
 
-Repository: crypto-price-predictor
+**2. Create virtual environment:**
+```bash
+python -m venv venv
+venv\Scripts\activate      # Windows
+source venv/bin/activate   # Mac/Linux
+```
 
-Branch: main
+**3. Install dependencies:**
+```bash
+pip install -r requirements.txt
+```
 
-Main file: app.py
+**4. Train the models:**
+```bash
+python -m src.train --symbol bitcoin --epochs 25
+python -m src.train --symbol ethereum --epochs 25
+```
 
-Click Deploy
+**5. Run the app:**
+```bash
+streamlit run app.py
+```
 
-⚠️ Disclaimer
-Cryptocurrency markets are highly volatile.
-This application is built for learning and demonstration purposes only.
+Open 👉 `http://localhost:8501`
 
-Do NOT use it for real trading or financial decisions.
+---
 
-👨‍💻 Author
-Samboju Sai Charan
-B.Tech – Artificial Intelligence
-Crypto Price Prediction Project 🚀
+## ☁️ Deploy on Streamlit Cloud
 
+1. Push code to GitHub
+2. Go to 👉 [share.streamlit.io](https://share.streamlit.io)
+3. Select repository: `neural-crypto`
+4. Set main file: `app.py`
+5. Click **Deploy** ✅
 
+---
+
+## 👨‍💻 Author
+
+**Samboju Sai Charan**
+B.Tech — Artificial Intelligence
+📧 [sambojusaicharan0@gmail.com]
+🔗 [https://www.linkedin.com/in/samboju-saicharan-674aa436b/](#) | [GitHub](https://github.com/sambojusai)
+
+---
+
+## ⚠️ Disclaimer
+
+Cryptocurrency markets are highly volatile. This application is built purely for **learning and demonstration** purposes. Do **NOT** use predictions for real trading or financial decisions.
