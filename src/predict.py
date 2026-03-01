@@ -17,24 +17,22 @@ def predict_price(symbol="bitcoin"):
         if not os.path.exists(model_path):
             raise FileNotFoundError(f"Model not found for {symbol}")
 
-        # Load model (SAFE)
         model = load_model(model_path, compile=False)
-
-        # Load scaler
         scaler = load_scaler(symbol)
 
-        # Load historical data
         data = load_crypto_data(symbol)
-        if len(data) < 60:
-            raise ValueError("Not enough historical data")
 
-        # Use last 60 close prices
-        last_60 = data["close"].tail(60).values.reshape(-1, 1)
+        # Ensure we have enough data
+        closes = data["close"].values
+        if len(closes) < 61:
+            raise ValueError(f"Not enough data: got {len(closes)}, need 61")
+
+        # Take exactly 60 days
+        last_60 = closes[-61:-1].reshape(-1, 1)
         last_60_scaled = scaler.transform(last_60)
 
         X_test = last_60_scaled.reshape(1, 60, 1)
 
-        # Predict
         predicted_scaled = model.predict(X_test, verbose=0)
         predicted_price = scaler.inverse_transform(predicted_scaled)
 

@@ -1,5 +1,2 @@
-model/
-*.h5
-*.pkl
 venv/
 .env
