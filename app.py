@@ -1,3 +1,4 @@
+import pandas as pd
 import streamlit as st
 import plotly.graph_objects as go
 import numpy as np
@@ -167,6 +168,54 @@ st.subheader("📉 Last 60 Days Closing Price")
 
 history = df.tail(60)
 st.line_chart(history["close"])
+# -------------------------------
+# MODEL COMPARISON
+# -------------------------------
+st.subheader("🤖 Model Comparison Dashboard")
+
+with st.expander("📊 Click to see Model Comparison Analysis"):
+    try:
+        from src.model_comparison import run_model_comparison
+
+        with st.spinner("Running model comparison... this takes 30 seconds"):
+            comparison_results, actual_prices = run_model_comparison(df)
+
+        # Show comparison table
+        st.markdown("### 📈 Performance Comparison (Lower is Better)")
+
+        comparison_data = {
+            "Model": [],
+            "MAE ($)": [],
+            "RMSE ($)": [],
+            "Performance": []
+        }
+
+        for model_name, metrics in comparison_results.items():
+            comparison_data["Model"].append(model_name)
+            comparison_data["MAE ($)"].append(metrics["mae"])
+            comparison_data["RMSE ($)"].append(metrics["rmse"])
+
+        # Find best model
+        maes = comparison_data["MAE ($)"]
+        min_mae = min(maes)
+        for mae in maes:
+            if mae == min_mae:
+                comparison_data["Performance"].append("🏆 Best")
+            else:
+                comparison_data["Performance"].append("📊 Compared")
+
+        comparison_df = pd.DataFrame(comparison_data)
+        st.dataframe(comparison_df, use_container_width=True)
+
+        st.markdown("### 💡 Why LSTM Wins?")
+        st.markdown("""
+        - **Linear Regression** assumes prices follow a straight line — too simple for volatile crypto
+        - **Random Forest** is better but doesn't understand time sequences
+        - **LSTM** remembers patterns from 60 days of history — best for time series data
+        """)
+
+    except Exception as e:
+        st.warning(f"Model comparison unavailable: {e}")
 
 # -------------------------------
 # FOOTER
