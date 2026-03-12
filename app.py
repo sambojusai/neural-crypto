@@ -95,7 +95,41 @@ try:
 
 except Exception as e:
     st.error(f"Prediction error: {e}")
+# -------------------------------
+# SENTIMENT ANALYSIS
+# -------------------------------
+st.subheader("📰 Market Sentiment Analysis")
 
+try:
+    from src.sentiment import get_crypto_sentiment
+    sentiment = get_crypto_sentiment(crypto)
+
+    # Sentiment score bar
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.metric(
+            label="Sentiment Score",
+            value=f"{sentiment['score']:.2f} / 1.0"
+        )
+    with col2:
+        st.metric(
+            label="Market Mood",
+            value=sentiment['label']
+        )
+    with col3:
+        st.metric(
+            label="Articles Analyzed",
+            value=f"{sentiment['total_analyzed']} news"
+        )
+
+    # Show headlines
+    st.markdown("**📰 Latest News Headlines:**")
+    for headline in sentiment['headlines']:
+        st.markdown(f"• {headline}")
+
+except Exception as e:
+    st.warning(f"Sentiment unavailable: {e}")
 # -------------------------------
 # CANDLESTICK CHART
 # -------------------------------
