@@ -169,6 +169,59 @@ st.subheader("📉 Last 60 Days Closing Price")
 history = df.tail(60)
 st.line_chart(history["close"])
 # -------------------------------
+# BACKTESTING
+# -------------------------------
+st.subheader("📊 Backtesting — How Good Is Our Model?")
+
+with st.expander("🔍 Click to see Backtest Results (Last 30 Days)"):
+    try:
+        from src.backtest import run_backtest
+
+        with st.spinner("Running backtest on last 30 days..."):
+            backtest = run_backtest(df, crypto)
+
+        # Key metrics
+        col1, col2, col3, col4 = st.columns(4)
+
+        with col1:
+            st.metric(
+                label="🎯 Direction Accuracy",
+                value=f"{backtest['direction_accuracy']}%"
+            )
+        with col2:
+            st.metric(
+                label="💰 Total Return",
+                value=f"{backtest['total_return']}%"
+            )
+        with col3:
+            st.metric(
+                label="🏦 Final Capital",
+                value=f"${backtest['final_capital']:,.2f}"
+            )
+        with col4:
+            st.metric(
+                label="✅ Winning Trades",
+                value=f"{backtest['winning_trades']}/{backtest['total_trades']}"
+            )
+
+        # Explanation
+        accuracy = backtest['direction_accuracy']
+        if accuracy >= 60:
+            st.success(f"✅ Model correctly predicted price direction {accuracy}% of the time — better than random guessing (50%)!")
+        elif accuracy >= 50:
+            st.warning(f"⚠️ Model predicted direction {accuracy}% of the time — slightly better than random guessing.")
+        else:
+            st.error(f"❌ Model predicted direction {accuracy}% of the time — needs improvement.")
+
+        # Recent trades table
+        st.markdown("**📋 Recent Trading Signals:**")
+        trades_df = pd.DataFrame(backtest['trades'])
+        if not trades_df.empty:
+            st.dataframe(trades_df, use_container_width=True)
+
+    except Exception as e:
+        st.warning(f"Backtest unavailable: {e}")
+# -------------------------------
 # MODEL COMPARISON
 # -------------------------------
 st.subheader("🤖 Model Comparison Dashboard")
